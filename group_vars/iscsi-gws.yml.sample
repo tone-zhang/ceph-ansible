@@ -17,7 +17,7 @@ dummy:
 # as an iscsi target portal ip. The list must be comma separated - and the order determines
 # the sequence of TPG's within the iscsi target across each gateway. Once set, additional
 # gateways can be added, but the order must *not* be changed.
-#gateway_ip_list: "192.168.122.101,192.168.122.102,192.168.122.103"
+#gateway_ip_list: 0.0.0.0
 
 # rbd_devices defines the images that should be created and exported from the iscsi gateways.
 # If the rbd does not exist, it will be created for you. In addition you may increase the
