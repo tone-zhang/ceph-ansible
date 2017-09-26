@@ -1,6 +1,16 @@
 ---
-- name: include pre_requisite.yml
-  include: pre_requisite.yml
+- name: include pre_requisite_non_container.yml
+  include: pre_requisite_non_container.yml
+  when:
+    - not containerized_deployment
+
+- name: include pre_requisite_container.yml
+  include: pre_requisite_container.yml
+  when:
+    - containerized_deployment
+
+- name: include create_rgw_keyring.yml
+  include: create_rgw_keyring.yml
   when:
     - not containerized_deployment
 
@@ -9,10 +19,3 @@
 
 - name: include start_nfs.yml
   include: start_nfs.yml
-  when:
-    - not containerized_deployment
-
-- name: include docker/main.yml
-  include: docker/main.yml
-  when:
-    - containerized_deployment

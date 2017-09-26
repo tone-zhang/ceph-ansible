@@ -1,0 +1,24 @@
+#!/bin/bash
+
+RETRIES="{{ handler_health_nfs_check_retries }}"
+DELAY="{{ handler_health_nfs_check_delay }}"
+NFS_NAME="{{ ansible_hostname }}"
+SOCKET=/var/run/ganesha.pid
+
+# First, restart the daemon
+{% if containerized_deployment -%}
+systemctl restart ceph-nfs@${NFS_NAME}
+{% else %}
+systemctl restart nfs-ganesha
+{% endif %}
+
+COUNT=10
+# Wait and ensure the socket exists after restarting the daemon
+while [ $RETRIES -ne 0 ]; do
+  {{ docker_exec_cmd }} test -S $SOCKET && exit 0
+  sleep $DELAY
+  let RETRIES=RETRIES-1
+done
+# If we reach this point, it means the socket is not present.
+echo "Socket file ${SOCKET} could not be found, which means Ganesha is not running."
+exit 1
